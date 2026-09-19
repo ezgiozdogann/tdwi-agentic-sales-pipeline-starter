@@ -10,14 +10,16 @@ This repository is the starter project for the hands-on workshop. **Workshop lab
 
 | Part | You do | You learn |
 |------|--------|-----------|
-| **Setup** ([README](README.md)) | Fork, clone, `.venv`, test push | Your own GitHub repo for Cloud Agents |
+| **Setup** ([README](README.md)) | Fork, clone, `.venv` (test push optional) | Your own GitHub repo for Cloud Agents |
 | **1** | Dockerfile + `environment.json`, secrets | Reproducible Cloud Agent environment |
 | **2** | Run failing tests → `AGENTS.md` → Cloud Agent → review & merge PR | Agent context, draft PRs, human verification |
 | **3** | Comments-only Automation → Streamlit Cloud Agent → review → optional fix agent → merge → `check.sh` + sub-agent harness | Three review layers; deterministic gates; separate implementer from reviewer; Bugbot / babysit |
 
 **After the lab:** [WORKFLOW_RECIPES.md](WORKFLOW_RECIPES.md) — agent workflow framework and **example** recipes in [`examples/`](examples/) (GitHub CI, `/commit-code`, ticket-driven Cloud Agents). Part 3 is a full **1.5 h+** block—plan accordingly.
 
-Follow the steps below to fork, clone, and verify you can push to your own copy on GitHub. There are two benefits of forking:
+Follow the steps below to fork, clone, and set up Python. **Authenticating local Git and the test push (steps 2 and 6) are optional for now.** If they fail, skip them and open the notebook — do not spend a long time troubleshooting. Cloud Agents use the Cursor dashboard GitHub connection, not this laptop login.
+
+There are two benefits of forking:
 1. You will be able to run Cursor Cloud Agents in your own environment, which is the point of this lab.
 2. You can push your changes to your own copy of the repository.
 
@@ -27,16 +29,18 @@ Follow the steps below to fork, clone, and verify you can push to your own copy 
 
    1. Go to [GitHub](https://github.com) and create an account.
 
-## 2. Authenticate your local Git to your GitHub account
+## 2. Authenticate your local Git to your GitHub account (optional)
 
-1. You only need to complete this step if you created a new account **or** if your local Git is not authenticated to your GitHub account. If you are unsure, you can skip this step now and come back to it if you are prompted for a password in step 6
-2. Create a **classic** Personal Access Token with the **`repo`** scope:
-   1. Sign in to [GitHub](https://github.com)
-   2. Open your profile menu (top right) → **Settings**
-   3. In the left sidebar, scroll to **Developer settings** → **Personal access tokens** → **Tokens (classic)**
-   4. Click **Generate new token** → **Generate new token (classic)**
-   5. Add a note (e.g. `TDWI workshop`), set an expiration if you like, and check the **`repo`** scope
-   6. Click **Generate token**, then **copy the token immediately** (you will not see it again). Store it somewhere safe—you will use it as your password when Git prompts you over HTTPS
+Skip this if you already push to GitHub from this machine, or if you want to go straight to fork / clone / `.venv`. You only need a token if you try the optional push in step 6.
+
+Create a **classic** Personal Access Token with the **`repo`** and **`admin:org`** scopes:
+
+1. Sign in to [GitHub](https://github.com)
+2. Open your profile menu (top right) → **Settings**
+3. In the left sidebar, scroll to **Developer settings** → **Personal access tokens** → **Tokens (classic)**
+4. Click **Generate new token** → **Generate new token (classic)**
+5. Add a note (e.g. `TDWI workshop`), set an expiration if you like, and check **`repo`** and **`admin:org`**
+6. Click **Generate token**, then **copy the token immediately** (you will not see it again). Store it somewhere safe—you will use it as your password when Git prompts you over HTTPS
 
 ## 3. Fork the workshop repository
 
@@ -82,7 +86,9 @@ If Windows reports that `python` is not found, try `py -m venv .venv` instead of
 
 When the venv is active, your terminal prompt usually shows `(.venv)`. You can confirm with `which python` (Mac) or `where python` (Windows)—the path should point inside `.venv`.
 
-## 6. Make your first push
+## 6. Make your first push (optional)
+
+This checks that you can push from Cursor to **your** fork. It is **optional**. If it fails, skip it and open the notebook — do not spend a long time troubleshooting.
 
 1. Create a test file, `test.txt`. In the file write:
    `this is just a test file to test committing and pushing`
@@ -92,7 +98,70 @@ When the venv is active, your terminal prompt usually shows `(.venv)`. You can c
    3. Write a simple commit message in the **Message** input, e.g. `a test commit`
    4. Press the **Commit** button
    5. Press the **Synchronize Changes** button in the lower left corner
-   6. If Git prompts for credentials: enter your **GitHub username** and, for the password, paste your **Personal Access Token** (created in step 2)—not your GitHub account password
+   6. If Git prompts for credentials: enter your **GitHub username** and, for the password, paste your **Personal Access Token** (from step 2)—not your GitHub account password
+
+If Git does **not** prompt — or the push fails / goes to the wrong GitHub user — this machine is probably using a cached account. Try **one** of the following with the **same token** from step 2. If neither works quickly, skip the push.
+
+**Clear the saved login, then push again** (uses `git` / the OS credential store — no `gh`)
+
+**Mac:** Open **Keychain Access** (Spotlight) → search `github.com` → delete the internet-password entries for GitHub → **Synchronize Changes** again. When Git prompts, paste the PAT as the password.
+
+**Windows:** Open **Credential Manager** (Start menu) → **Windows Credentials** → remove `git:https://github.com` (and any similar `github.com` entries) → **Synchronize Changes** again. When Git prompts, paste the PAT as the password.
+
+**GitHub CLI (`gh`)** — optional; `gh` is not installed by default. Use this if you already have it, or if you prefer it to Keychain / Credential Manager.
+
+**Mac**
+
+```bash
+brew install gh
+```
+
+If you do not have Homebrew, download the macOS installer from [cli.github.com](https://cli.github.com/).
+
+**Windows** (PowerShell)
+
+```powershell
+winget install --id GitHub.cli
+```
+
+If `winget` is not available, download the Windows installer from [cli.github.com](https://cli.github.com/).
+
+Close and reopen the terminal (or Cursor) so `gh` is on your PATH. Confirm with `gh --version` (same command on Mac and Windows).
+
+Then (same on Mac and Windows):
+
+```bash
+gh auth login
+```
+
+When prompted, choose:
+
+1. **GitHub.com**
+2. **HTTPS**
+3. **Yes** — authenticate Git with your GitHub credentials
+4. **Paste an authentication token** — paste the Personal Access Token from step 2 (not a browser login)
+
+Confirm the active account:
+
+```bash
+gh auth status
+```
+
+If the wrong user is active (for example work vs personal), switch:
+
+```bash
+gh auth switch --user YOUR_GITHUB_USERNAME
+```
+
+Then run `gh auth status` again. If that username is not listed, run `gh auth login` again and paste the token for that account, then switch.
+
+If Git still uses the old account, run:
+
+```bash
+gh auth setup-git
+```
+
+Then try **Synchronize Changes** again.
 
 ---
 
