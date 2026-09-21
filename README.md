@@ -10,14 +10,14 @@ This repository is the starter project for the hands-on workshop. **Workshop lab
 
 | Part | You do | You learn |
 |------|--------|-----------|
-| **Setup** ([README](README.md)) | Fork, clone, `.venv` (test push optional) | Your own GitHub repo for Cloud Agents |
+| **Setup** ([README](README.md)) | Fork, connect Cursor to GitHub, clone, `.venv` (test push optional) | Your own GitHub repo for Cloud Agents |
 | **1** | Dockerfile + `environment.json`, secrets | Reproducible Cloud Agent environment |
 | **2** | Run failing tests → `AGENTS.md` → Cloud Agent → review & merge PR | Agent context, draft PRs, human verification |
 | **3** | Comments-only Automation → Streamlit Cloud Agent → review → optional fix agent → merge → `check.sh` + sub-agent harness | Three review layers; deterministic gates; separate implementer from reviewer; Bugbot / babysit |
 
 **After the lab:** [WORKFLOW_RECIPES.md](WORKFLOW_RECIPES.md) — agent workflow framework and **example** recipes in [`examples/`](examples/) (GitHub CI, `/commit-code`, ticket-driven Cloud Agents). Part 3 is a full **1.5 h+** block—plan accordingly.
 
-Follow the steps below to fork, clone, and set up Python. **Authenticating local Git and the test push (steps 2 and 6) are optional for now.** If they fail, skip them and open the notebook — do not spend a long time troubleshooting. Cloud Agents use the Cursor dashboard GitHub connection, not this laptop login.
+Follow the steps below to fork, clone, and set up Python. **Authenticating local Git and the test push (steps 2 and 7) are optional for now.** If they fail, skip them and open the notebook — do not spend a long time troubleshooting. **Connecting Cursor to GitHub (step 4) is required** so Cloud Agents can see your fork. That dashboard connection is separate from the Personal Access Token in step 2.
 
 There are two benefits of forking:
 1. You will be able to run Cursor Cloud Agents in your own environment, which is the point of this lab.
@@ -31,7 +31,7 @@ There are two benefits of forking:
 
 ## 2. Authenticate your local Git to your GitHub account (optional)
 
-Skip this if you already push to GitHub from this machine, or if you want to go straight to fork / clone / `.venv`. You only need a token if you try the optional push in step 6.
+Skip this if you already push to GitHub from this machine, or if you want to go straight to fork / clone / `.venv`. You only need a token if you try the optional push in step 7.
 
 Create a **classic** Personal Access Token with the **`repo`** and **`admin:org`** scopes:
 
@@ -49,7 +49,16 @@ Create a **classic** Personal Access Token with the **`repo`** and **`admin:org`
 2. Click **Fork** → **Create a new fork**
 3. Click **Create fork** in the lower right
 
-## 4. Clone your fork in Cursor
+## 4. Connect Cursor to GitHub (required for Cloud Agents)
+
+Cloud Agents use this connection. The Personal Access Token in step 2 is only for local `git push`.
+
+1. Open [cursor.com/dashboard/integrations](https://cursor.com/dashboard/integrations) while signed in to the **same Cursor account** as the IDE.
+2. Next to **GitHub**, click **Connect**. If GitHub is already connected, open it and check the repo list.
+3. Choose **All repositories**. If you use **Selected repositories**, allow **your fork** (`your-username/tdwi-agentic-sales-pipeline-starter`). Cloud Agents cannot see a repo that is not allowed here.
+4. If you connected before you forked and you used **Selected repositories**, return to this page and allow the fork.
+
+## 5. Clone your fork in Cursor
 
 1. Copy the HTTPS URL from **your** forked repo (**Code** → **HTTPS**, then copy the link)
 2. In Cursor, open the Command Palette (**Cmd/Ctrl + Shift + P**) → type: **Git: Clone**
@@ -58,9 +67,9 @@ Create a **classic** Personal Access Token with the **`repo`** and **`admin:org`
 5. Select **Open Workspace** when the popup appears in the lower right
 6. Reload Cursor so Git and Agent pick up the new folder: Command Palette (**Cmd/Ctrl + Shift + P**) → **Developer: Reload Window**
 
-If Git or Agent still look stuck after you authenticate in step 6, reload again.
+If Git or Agent still look stuck after you authenticate in step 7, reload again.
 
-## 5. Set up the Python environment (`.venv`)
+## 6. Set up the Python environment (`.venv`)
 
 You need Python 3 installed locally. In Cursor, open a terminal (**Terminal** → **New Terminal**) with the project folder as the working directory, then run the commands for your OS.
 
@@ -89,7 +98,7 @@ If Windows reports that `python` is not found, try `py -m venv .venv` instead of
 
 When the venv is active, your terminal prompt usually shows `(.venv)`. You can confirm with `which python` (Mac) or `where python` (Windows)—the path should point inside `.venv`.
 
-## 6. Make your first push (optional)
+## 7. Make your first push (optional)
 
 This checks that you can push from Cursor to **your** fork. It is **optional**. If it fails, skip it and open the notebook — do not spend a long time troubleshooting.
 
