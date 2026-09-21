@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 # ================================================
 # TDWI Lab 3 – Cloud Agent Dockerfile
-# See: https://cursor.com/environment-json-dockerfile.md
+# See: https://www.cursor.com/environment-json-dockerfile.md
 # ================================================
 
 # Full Python image (not slim) — includes more system libs for builds and matplotlib.
