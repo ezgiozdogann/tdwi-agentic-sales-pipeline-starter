@@ -2,15 +2,15 @@
 
 Reference for building reliable **human + agent** development workflows.
 
-**This Lab 2** (wine classifier) practices Recipes **1–3** in class:
+**This Lab 3** (sales pipeline / Cloud Agents) practices Recipes **1, 2, and 5** in class:
 
-- **Recipe 1:** `scripts/check.sh` is **pre-shipped** (students run it; they do not create it here)
-- **Recipe 2:** `AGENTS.md` + pytest
-- **Recipe 3:** students **create `/commit-code` in class** (from the examples template)
+- **Recipe 2:** `AGENTS.md` + pytest (Part 2)
+- **Recipe 1:** students **create** `scripts/check.sh` in class (Part 3)
+- **Recipe 5:** PR Automations (Part 3)
 
-Lab 3 (sales pipeline) differs: students **create** `check.sh` in class; `/commit-code` stays examples-only there; Recipe 5 PR automations are a Lab 3 topic.
+Lab 2 (wine classifier) differed: `check.sh` was pre-shipped; students created `/commit-code` in class. Here `/commit-code` stays in `examples/` only.
 
-Everything under [`examples/`](examples/) is **starter / vanilla reference material**. In Lab 2, copy the `/commit-code` template from `examples/` during class; other examples (CI, PR automations) are for after the workshop or other labs. See [`examples/README.md`](examples/README.md).
+Everything under [`examples/`](examples/) is **starter / vanilla reference material**. Recipes **3, 4, and 6** are illustrated there—copy and extend them on your own fork after the lab. See [`examples/README.md`](examples/README.md).
 
 ## Core framework
 
@@ -88,7 +88,7 @@ Automate the parenthesized steps gradually via scripts, `AGENTS.md`, rules, slas
 
 | Surface | Good for |
 |---------|----------|
-| **Local** | `scripts/check.sh` (**Lab 2:** pre-shipped; **Lab 3:** created in Part 3) or `scripts/check.py` (post-lab from example), `AGENTS.md`, `.cursor/rules/`, `/commit-code`, pre-commit hooks |
+| **Local** | `scripts/check.sh` (created in Part 3) or `scripts/check.py` (post-lab from example), `AGENTS.md`, `.cursor/rules/`, `/commit-code`, pre-commit hooks |
 | **Cloud Agent** | Same `AGENTS.md` + same check script in the Dockerfile-managed VM |
 | **GitHub** | Actions workflow on PR; Automations on **PR opened** or **CI completed**; Cloud Agents responding to CI/review events |
 
@@ -98,16 +98,14 @@ Implementation details depend on your stack and AI tool (Cursor, Copilot, Claude
 
 ## Example recipes (simple → advanced)
 
-> **Lab vs examples:** **Recipes 1–3** are practiced in **this Lab 2** (`check.sh` is pre-shipped; `AGENTS.md` + pytest; `/commit-code` created in class from `examples/`). **Recipes 4–6** (and Lab 3’s Recipe 5 automation work) are post-lab or other-lab. Recipe 3 is **not** examples-only in this repo.
+> **Lab vs examples:** **Recipes 1, 2, and 5** are practiced in this lab (Part 3 Step 8 introduces `scripts/check.sh`). Recipes 3, 4, and 6 are illustrated by files in `examples/`—copy and extend them on your own fork after the lab.
 
 ### Recipe 1 — Deterministic check script
 
 **One entry point** for humans and agents. Same command on Mac, Linux, Windows (Git Bash), and Cloud Agent Linux.
 
-**Lab 2 (this repo):** `scripts/check.sh` is **pre-shipped**. Students **run** it (notebook Step 7); they do **not** create it in class. Creating `check.sh` in class is **Lab 3**.
-
-- **In Lab 3 (Part 3, Step 8):** Students create [`scripts/check.sh`](scripts/check.sh) at the repo root—a minimal starter with `pip install --dry-run`, commented extension points (e.g. ruff), and `pytest`. Motivated by real agent mistakes (e.g. Streamlit pins incompatible with pinned pandas). Step 9 wires it into prompts, `AGENTS.md`, and hooks; Step 10 demos a fix pass (with the caveat that checks belong on **every** agent run, not a separate Cloud Agent only). **Step 11** repeats the review-and-merge loop on the fix PR, then confirms a working Streamlit app on `main`.
-- **Lab 3 Part 2:** Students still use `python -m pytest test_sales_report.py` via `AGENTS.md` (Recipe 2) before Part 3 adds the script.
+- **In lab (Part 3, Step 8):** Students create [`scripts/check.sh`](scripts/check.sh) at the repo root—a minimal starter with `pip install --dry-run`, commented extension points (e.g. ruff), and `pytest`. Motivated by real agent mistakes (e.g. Streamlit pins incompatible with pinned pandas). Step 9 wires it into prompts, `AGENTS.md`, and hooks; Step 10 demos a fix pass (with the caveat that checks belong on **every** agent run, not a separate Cloud Agent only). **Step 11** repeats the review-and-merge loop on the fix PR, then confirms a working Streamlit app on `main`.
+- **Part 2:** Students still use `python -m pytest test_sales_report.py` via `AGENTS.md` (Recipe 2) before Part 3 adds the script.
 - **Post-lab:** Copy and grow [`examples/scripts/check.py`](examples/scripts/check.py) (Python entry point, more extension points) or extend your lab `check.sh`.
 
 Try the fuller example from repo root (optional, post-lab):
@@ -128,22 +126,21 @@ Before pushing or opening a PR, run `bash scripts/check.sh` and fix all failures
 
 ### Recipe 2 — `AGENTS.md` workflow rules *(lab default)*
 
-Encode "run tests before push" in repo-level agent instructions.
+Encode "run tests before push" in repo-level agent instructions. Students add this in **Part 2**.
 
-- **Lab 2 (this repo):** [`AGENTS.md`](AGENTS.md) is pre-shipped with pytest / `check.sh` / tests-from-spec rules.
-- **Lab 3:** Students add this in **Part 2** (sales pipeline repo).
-- **ReAct:** The agent runs pytest, reads failures, fixes code, repeats.
+- **In lab:** [`AGENTS.md`](AGENTS.md) + the testing paragraph in [`LAB3-Part-2-Running-Cursor-Cloud-Agents.ipynb`](LAB3-Part-2-Running-Cursor-Cloud-Agents.ipynb)
+- **ReAct:** Cloud Agent runs pytest, reads failures, fixes code, repeats.
 
 This is the minimum viable deterministic gate—no extra tooling required.
 
 ---
 
-### Recipe 3 — `/commit-code` slash command *(Lab 2: created in class)*
+### Recipe 3 — `/commit-code` slash command *(example only)*
 
 A Cursor **slash command** that orchestrates: diff → run check script → (optional) sub-agent review → suggest commit message → ask user to confirm.
 
-- **Lab 2 (this repo):** Students create `.cursor/commands/commit-code.md` **in class** from [`examples/cursor/commands/commit-code.md`](examples/cursor/commands/commit-code.md) (copy source; omit the "EXAMPLE ONLY" header).
-- **Lab 3:** `/commit-code` stays examples-only; students do not create it in that lab.
+- **Example:** [`examples/cursor/commands/commit-code.md`](examples/cursor/commands/commit-code.md)  
+  Copy to `.cursor/commands/commit-code.md` to enable `/commit-code`. Lab 2 created this command in class; this lab does not.
 
 **Why start here:** Easy to try, easy to adjust. Commands can take arguments (e.g. `--quick` to skip **expensive** sub-agent review). Good for teams adopting AI workflows incrementally.
 
@@ -164,11 +161,11 @@ Run the **same** check script on every push/PR so GitHub is the source of truth 
 
 ---
 
-### Recipe 5 — PR review Automation *(Lab 3: Part 3)*
+### Recipe 5 — PR review Automation *(lab: Part 3)*
 
-Event-driven **agent review** on GitHub after a human marks a draft PR **Ready for review**. Lab 3 uses **comments only** (Bugbot-like); a **second Cloud Agent** implements fixes on the same branch (Step 6b). This is **not** a Lab 2 exercise.
+Event-driven **agent review** on GitHub after a human marks a draft PR **Ready for review**. This lab uses **comments only** (Bugbot-like); a **second Cloud Agent** implements fixes on the same branch (Step 6b).
 
-- **In Lab 3:** Part 3 hands-on
+- **In lab:** Part 3 hands-on
 - **Example instructions:** [`examples/automations/pr-review-instructions.md`](examples/automations/pr-review-instructions.md)
 
 **Trigger:** **Pull request opened** only—not **Draft opened**.
@@ -224,13 +221,11 @@ Jira ticket (context)
 
 ## Adoption path (suggested)
 
-The numbered sequence below is **Lab 3–oriented** (sales pipeline). **This Lab 2** already practices Recipes **1–3** in class: Recipe 1 is pre-shipped, Recipe 2 is `AGENTS.md` + pytest, and Recipe 3 (`/commit-code`) is created in class.
-
-1. **Recipe 2** — `AGENTS.md` + pytest (**Lab 3 Part 2**)
-2. **Recipe 1** — `scripts/check.sh` with pip dry-run + pytest (**Lab 3 Part 3**); post-lab grow via `examples/scripts/check.py`
+1. **Recipe 2** — `AGENTS.md` + pytest (**lab Part 2**)
+2. **Recipe 1** — `scripts/check.sh` with pip dry-run + pytest (**lab Part 3**); post-lab grow via `examples/scripts/check.py`
 3. **Recipe 3** — `/commit-code` for local commits (use `--quick` until sub-agent review is worth the cost)
 4. **Recipe 4** — GitHub Actions running the same script
-5. **Recipe 5** — PR Automation after ready + green CI (**Lab 3 Part 3**)
+5. **Recipe 5** — PR Automation after ready + green CI (**lab Part 3**)
 6. **Recipe 6** — Ticket integration + MCP + full inner-loop automation
 
 Take small steps. Adjust prompts and gates based on what fails in practice.
@@ -238,8 +233,6 @@ Take small steps. Adjust prompts and gates based on what fails in practice.
 ---
 
 ## Related lab material
-
-**Lab 3** (sales pipeline) parts — not this wine Lab 2:
 
 | Part | What you practiced |
 |------|-------------------|
