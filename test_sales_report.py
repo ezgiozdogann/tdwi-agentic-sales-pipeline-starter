@@ -1,8 +1,8 @@
-import pytest
 import pandas as pd
+import pytest
+
 from generate_sales_report import (
     load_and_clean_data,
-    generate_metrics,
 )
 
 
