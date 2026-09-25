@@ -5,6 +5,11 @@ import os
 
 def load_and_clean_data():
     df = pd.read_csv("data/messy_sales_data.csv")
+    df = df.drop_duplicates()
+    df["date"] = pd.to_datetime(df["date"], format="mixed")
+    df["quantity"] = pd.to_numeric(df["quantity"])
+    df["price"] = pd.to_numeric(df["price"])
+    df["revenue"] = df["price"] * df["quantity"]
     return df
 
 
@@ -16,8 +21,10 @@ def generate_metrics(df):
 
 
 def create_chart(df):
+    daily_revenue = df.groupby("date")["revenue"].sum()
+    daily_revenue.index = daily_revenue.index.strftime("%Y-%m-%d")
     plt.figure(figsize=(10, 6))
-    df.groupby("date")["revenue"].sum().plot(kind="bar")
+    daily_revenue.plot(kind="bar")
     plt.title("Daily Revenue Trend")
     plt.xlabel("Date")
     plt.ylabel("Revenue")
@@ -28,6 +35,7 @@ def create_chart(df):
 
 def mock_encrypt_export(df, secret_key):
     # Uses the secret (REPORT_EXPORT_KEY)
+    os.makedirs("output", exist_ok=True)
     encrypted_file = "output/encrypted_sales_report.csv"
     df.to_csv(encrypted_file, index=False)
     print(f"Exported encrypted report using secret: {secret_key[:4]}...")
